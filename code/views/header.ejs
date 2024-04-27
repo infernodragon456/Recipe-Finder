@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recipe Finder</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      nav {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+      }
+
+      .logo {
+        color: green;
+        font-size: 32px;
+        margin-right: 5px;
+      }
+
+      .search-bar {
+        display: flex;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 25px;
+        font-size: 16px;
+      }
+
+      .search-input:not(:last-child) {
+        margin-right: 5px;
+      }
+
+      .button {
+        padding: 10px 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .button:hover {
+        background-color: #45a049;
+      }
+
+      .selected-ingredients {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 5px;
+      }
+
+      .ingredient-button {
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        padding: 5px 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .ingredient-button-close {
+        margin-left: 5px;
+        cursor: pointer;
+      }
+      a::after{
+        transition: 0.3s;
+      }
+      a:hover:after{
+        color: #45a049;
+        
+      }
+      .search-results {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: #fff;
+        border: 2px solid #ccc;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
+        display: none;
+      }
+
+      .search-results ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .search-results li {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .search-results li:hover {
+        background-color: #f2f2f2;
+      }
+
+      .maindiv {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(100% - 100px);
+        margin-top: 20px;
+      }
+
+      .maindiv > div {
+        margin: 20px;
+      }
+
+      table {
+        width: 100%;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        color: white;
+      }
+
+      table td {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+      }
+
+      table th {
+        background-color: #f71a1a;
+      }
+      .button-Container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      .button-Container button {
+        margin: 0 10px;
+        padding: 10px 20px; /* Adjust padding as needed */
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .button-Container button:hover {
+        background-color: #45a049;
+      }
+
+      .button-Container button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .viewButton {
+        padding: 5px 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .viewButton:hover {
+        background-color: #45a049;
+      }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        text-align: center;
+      }
+
+      .footer-content {
+        padding: 10px; /* Adjust as needed */
+      }
+      .recipe {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        padding: 80px;
+        padding-top: 80px;
+      }
+      h3 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+      ul {
+        margin-top: 0;
+        padding-left: 20px;
+      }
+      li {
+        margin-bottom: 5px;
+      }
+      .content {
+        padding-top: 80px;
+      }
+
+      .contentAbout {
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-right: 800px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        padding-top: 80px;
+        font-size: 2.5em;
+        color: black;
+        margin-bottom: 20px;
+      }
+      p,
+      li {
+        font-size: 1.1em;
+        color: brown;
+        line-height: 1.6;
+      }
+    </style>
+    <script>
+      function redirectFunc() {
+        window.location.replace("http://localhost:3001/");
+      }
+      function redirectAbout() {
+        window.location.replace("http://localhost:3001/about");
+      }
+    </script>
+  </head>
+  <body style="background-image: url('background.jpg')">
+    <nav>
+      <div class="logo">
+        <i class="fa-solid fa-seedling"></i>
+      </div>
+      <form id="form" action="/query" method="get">
+        <div class="search-bar">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Ingredient 1"
+            name="searchquery1"
+            id="searchquery1"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Ingredient 2"
+            name="searchquery2"
+            id="searchquery2"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Ingredient 3"
+            name="searchquery3"
+            id="searchquery3"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Ingredient 4"
+            name="searchquery4"
+            id="searchquery4"
+          />
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Ingredient 5"
+            name="searchquery5"
+            id="searchquery5"
+          />
+          <button class="button" id="findRecipe">Submit</button>
+        </div>
+      </form>
+      <a href="/" style="color: #f0f0f0; text-decoration: none; margin-right: -30px;">Home</a>
+      <a href="/about" style="color: #f0f0f0; text-decoration: none; margin-left: -50px; margin-right: 50px;">About</a>
+      </button>
+    </nav>
+  
+</html>

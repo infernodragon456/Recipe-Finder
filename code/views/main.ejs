@@ -1,0 +1,145 @@
+<%- include("header") -%>
+
+<div class="selected-ingredients"></div>
+<div class="search-results"></div>
+
+<script>
+  const searchInputs = document.querySelectorAll(".search-input");
+  const searchResults = document.querySelector(".search-results");
+  const findRecipeBtn = document.getElementById("findRecipe");
+  const selectedIngredientsContainer = document.querySelector(
+    ".selected-ingredients"
+  );
+</script>
+<div class="content">
+  <div>
+    <table
+      style="align-self: center; width: 60%; margin-top: 5%"
+      align="center"
+    >
+      <thead>
+        <tr>
+          <th>RecipeName</th>
+          <!-- <th>Ingredients</th> -->
+          <th>PrepTimeInMins</th>
+          <th>Votes</th>
+          <th>Recipe</th>
+        </tr>
+      </thead>
+      <tbody id="recipeTableBody">
+        <%recipe.forEach( recipe => {%>
+        <tr>
+          <td><%=recipe.RecipeName%></td>
+          <td style="font-weight: 900; text-align: center">
+            <%=recipe.PrepTimeInMins%>
+          </td>
+          <td style="font-weight: 900; text-align: center">
+            <%=recipe.Votes%>
+          </td>
+          <td>
+            <button
+              onclick="fetchAndLogContent('<%= recipe.URL %>')"
+              class="viewButton"
+            >
+              View
+            </button>
+          </td>
+        </tr>
+        <%});%>
+      </tbody>
+    </table>
+  </div>
+  <div class="button-Container">
+    <button id="prevButton" disabled>Previous</button>
+    <button id="nextButton">Next</button>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function fetchAndLogContent(url) {
+    url = url.replace("https://www.archanaskitchen.com/", "");
+    url = url.replace("http://www.archanaskitchen.com/", "");
+
+    window.location.replace("http://localhost:3001/recipe/" + url);
+  }
+
+  let searchquery1,
+    searchquery2,
+    searchquery3,
+    searchquery4,
+    searchquery5 = "";
+  const entry1 = document.getElementById("searchquery1");
+  const entry2 = document.getElementById("searchquery2");
+  const entry3 = document.getElementById("searchquery3");
+  const entry4 = document.getElementById("searchquery4");
+  const entry5 = document.getElementById("searchquery5");
+  const storedValues1 = JSON.parse(sessionStorage.getItem("value1"));
+  const storedValues2 = JSON.parse(sessionStorage.getItem("value2"));
+  const storedValues3 = JSON.parse(sessionStorage.getItem("value3"));
+  const storedValues4 = JSON.parse(sessionStorage.getItem("value4"));
+  const storedValues5 = JSON.parse(sessionStorage.getItem("value5"));
+  entry1.value = storedValues1;
+  entry2.value = storedValues2;
+  entry3.value = storedValues3;
+  entry4.value = storedValues4;
+  entry5.value = storedValues5;
+  entry1.addEventListener("input", () => {
+    searchquery1 = entry1.value;
+    sessionStorage.setItem("value1", JSON.stringify(searchquery1));
+  });
+  entry2.addEventListener("input", () => {
+    searchquery2 = entry2.value;
+    sessionStorage.setItem("value2", JSON.stringify(searchquery2));
+  });
+  entry3.addEventListener("input", () => {
+    searchquery3 = entry3.value;
+    sessionStorage.setItem("value3", JSON.stringify(searchquery3));
+  });
+  entry4.addEventListener("input", () => {
+    searchquery4 = entry4.value;
+    sessionStorage.setItem("value4", JSON.stringify(searchquery4));
+  });
+  entry5.addEventListener("input", () => {
+    searchquery5 = entry5.value;
+    sessionStorage.setItem("value5", JSON.stringify(searchquery5));
+  });
+
+  let currentPage = JSON.parse(sessionStorage.getItem("page")) || 0;
+  currentPage = +currentPage;
+  if (currentPage != 0) {
+    document.getElementById("prevButton").disabled = false;
+  }
+  console.log(currentPage);
+  document.getElementById("prevButton").addEventListener("click", () => {
+    currentPage--;
+    sessionStorage.setItem("page", JSON.stringify(currentPage));
+    fetchRecipes(currentPage);
+  });
+
+  document.getElementById("nextButton").addEventListener("click", () => {
+    currentPage++;
+    sessionStorage.setItem("page", JSON.stringify(currentPage));
+    fetchRecipes(currentPage);
+  });
+  document.getElementById("aboutBtn").addEventListener("click", function () {
+    window.location.href = "/about";
+  });
+  function fetchRecipes(page_number) {
+    window.location.replace(
+      "http://localhost:3001/query?searchquery1=" +
+        storedValues1 +
+        "&searchquery2=" +
+        storedValues2 +
+        "&searchquery3=" +
+        storedValues3 +
+        "&searchquery4=" +
+        storedValues4 +
+        "&searchquery5=" +
+        storedValues5 +
+        "&page_number=" +
+        page_number
+    );
+  }
+</script>
+
+<%- include("footer") -%>
